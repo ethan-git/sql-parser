@@ -12,13 +12,11 @@
 package psn.ej.parser.antlr.sql;
 
 import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.snt.inmemantlr.GenericParser;
-import org.snt.inmemantlr.stream.CasedStreamProvider;
-import org.snt.inmemantlr.stream.StreamProvider;
 
 import psn.ej.parser.antlr.sql.oracle.PlSqlLexer;
 import psn.ej.parser.antlr.sql.oracle.PlSqlParser;
@@ -31,7 +29,6 @@ import psn.ej.parser.antlr.sql.oracle.PlSqlParser;
  */
 public class OracleSqlParser implements SqlParser {
 
-	private StreamProvider provider;
 	private PlSqlLexer sqlLexer;
 	private PlSqlParser sqlParser;
 	
@@ -41,9 +38,7 @@ public class OracleSqlParser implements SqlParser {
 	 * @param sql
 	 */
 	public OracleSqlParser(String sql){
-		this.provider = new CasedStreamProvider(GenericParser
-                .CaseSensitiveType.UPPER);
-		this.sqlLexer = new PlSqlLexer(this.provider.getCharStream(sql));
+		this.sqlLexer = new PlSqlLexer(CharStreams.fromString(sql.toUpperCase()));
 		BufferedTokenStream tokens = new CommonTokenStream(this.sqlLexer);
         tokens.fill();
 		this.sqlParser = new PlSqlParser(tokens);
